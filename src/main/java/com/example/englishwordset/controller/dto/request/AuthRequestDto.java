@@ -16,7 +16,7 @@ public class AuthRequestDto {
     private String id;
 
     @Pattern(
-            regexp = "[ a-zA-Z0-9!#$%&'()*+,./:;\"+\"<=>?@＼^_`{|}~]{8,8}",
+            regexp = "[a-zA-Z0-9!#$%&'()*+,./:;\"+\"<=>?@＼^_`{|}~]{8,8}",
             message = "password should be 8 words"
     )
     @NotEmpty(message = "please init any value in password")
