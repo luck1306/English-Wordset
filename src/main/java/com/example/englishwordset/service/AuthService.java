@@ -6,10 +6,13 @@ import com.example.englishwordset.entity.refresh.RefreshRepository;
 import com.example.englishwordset.entity.user.User;
 import com.example.englishwordset.entity.user.UserRepository;
 import com.example.englishwordset.exceptioin.PasswdNotMatchedException;
+import com.example.englishwordset.exceptioin.TokenTypeWrongException;
 import com.example.englishwordset.exceptioin.UserAlreadyExistException;
 import com.example.englishwordset.exceptioin.UserNotFoundException;
+import com.example.englishwordset.security.JwtProperties;
 import com.example.englishwordset.security.JwtProvider;
 import com.example.englishwordset.security.details.Details;
+import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -47,6 +50,17 @@ public class AuthService {
         return TokenResponseDto.builder()
                 .accessToken(jwtProvider.accessTokenGenerator(userId))
                 .refreshToken(jwtProvider.refreshTokenGenerator(userId))
+                .build();
+    }
+
+    @Transactional
+    public TokenResponseDto reissue(String token) {
+        Claims claims = jwtProvider.parseToken(token);
+        String tokenType = claims.get("type", String.class);
+        if (!tokenType.equals(JwtProperties.refreshValue)) throw TokenTypeWrongException.EXCEPTION;
+        return TokenResponseDto.builder()
+                .accessToken(jwtProvider.accessTokenGenerator(claims.getSubject()))
+                .refreshToken(jwtProvider.refreshTokenGenerator(claims.getSubject()))
                 .build();
     }
 

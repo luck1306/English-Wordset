@@ -18,6 +18,14 @@ public class JwtProperties {
 
     private final Long refresh;
 
+    public static final String accessValue = "access";
+
+    public static final String refreshValue = "refresh";
+
+    public static final String HEADER = "Authorization";
+
+    public static final String PREFIX = "Bearer ";
+
     public JwtProperties(String secret, Long access, Long refresh) {
         this.secret = Encoders.BASE64.encode(secret.getBytes(StandardCharsets.UTF_8));
         this.access = access;

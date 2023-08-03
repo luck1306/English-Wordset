@@ -1,5 +1,6 @@
 package com.example.englishwordset.security;
 
+import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,16 +22,18 @@ public class JwtFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         String token = parseTokenToRequest(request);
         if (token != null) {
-            Authentication authentication = jwtProvider.getAuthentication(token);
+            Claims claims = jwtProvider.parseToken(token);
+            jwtProvider.tokenValid(claims.get("type", String.class), claims.getExpiration());
+            Authentication authentication = jwtProvider.getAuthentication(claims.getSubject());
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
         filterChain.doFilter(request, response);
     }
 
     private String parseTokenToRequest(HttpServletRequest request) {
-        String token = request.getHeader("Authorization");
-        if (token != null && token.startsWith("Bearer")) {
-            return token.replace("Bearer ", "");
+        String token = request.getHeader(JwtProperties.HEADER);
+        if (token != null && token.startsWith(JwtProperties.PREFIX)) {
+            return token.replace(JwtProperties.PREFIX, "");
         }
         return null;
     }

@@ -27,6 +27,11 @@ public class AuthController {
         return authService.login(requestDto.getId(), requestDto.getPassword());
     }
 
+    @PutMapping("/reissue")
+    public TokenResponseDto reissue(@RequestHeader(name = "refresh_token") String token) {
+        return authService.reissue(token);
+    }
+
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/logout")
     public void logout() {

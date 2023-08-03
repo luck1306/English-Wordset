@@ -45,11 +45,11 @@ public class JwtProvider {
     }
 
     public String accessTokenGenerator(String userId) {
-        return generateToken("access", userId, jwtProperties.getAccess());
+        return generateToken(JwtProperties.accessValue, userId, jwtProperties.getAccess());
     }
 
     public String refreshTokenGenerator(String userId) {
-        String refreshToken = generateToken("refresh", userId, jwtProperties.getRefresh());
+        String refreshToken = generateToken(JwtProperties.refreshValue, userId, jwtProperties.getRefresh());
         Refresh refresh = refreshRepository.findById(userId).orElse(null);
         if (refresh != null) {
             refreshRepository.save(refresh.updateToken(refreshToken));
@@ -63,17 +63,17 @@ public class JwtProvider {
         return refreshToken;
     }
 
-    public Authentication getAuthentication(String token) {
-        Claims claims = parseToken(token);
-
-        UserDetails principal = detailsService.loadUserByUsername(claims.getSubject());
+    public Authentication getAuthentication(String id) {
+        UserDetails principal = detailsService.loadUserByUsername(id);
         return new UsernamePasswordAuthenticationToken(principal, null, principal.getAuthorities());
     }
 
-    private Claims parseToken(String token) {
-        Claims claims = Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token).getBody();
-        if (claims.get("type", String.class).equals("refresh")) throw TokenTypeWrongException.EXCEPTION;
-        if (claims.get("exp", Date.class).before(new Date())) throw TokenExpiredException.EXCEPTION;
-        return claims;
+    public Claims parseToken(String token) {
+        return Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token).getBody();
+    }
+
+    public void tokenValid(String type, Date expired) {
+        if (type.equals(JwtProperties.refreshValue)) throw TokenTypeWrongException.EXCEPTION;
+        if (expired.before(new Date())) throw TokenExpiredException.EXCEPTION;
     }
 }

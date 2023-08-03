@@ -36,6 +36,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(req -> req
                         .antMatchers(HttpMethod.POST, "/auth/sign-up").permitAll()
                         .antMatchers(HttpMethod.POST, "/auth/login").permitAll()
+                        .antMatchers(HttpMethod.PUT, "/auth/reissue").permitAll()
                         .antMatchers(HttpMethod.DELETE, "/auth/logout").authenticated()
                         .anyRequest().denyAll()
                 )
