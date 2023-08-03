@@ -65,14 +65,15 @@ public class JwtProvider {
 
     public Authentication getAuthentication(String token) {
         Claims claims = parseToken(token);
-        if (claims.get("type", String.class).equals("refresh")) throw TokenTypeWrongException.EXCEPTION;
-        if (claims.get("exp", Date.class).before(new Date())) throw TokenExpiredException.EXCEPTION;
 
         UserDetails principal = detailsService.loadUserByUsername(claims.getSubject());
         return new UsernamePasswordAuthenticationToken(principal, null, principal.getAuthorities());
     }
 
     private Claims parseToken(String token) {
-        return Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token).getBody();
+        Claims claims = Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token).getBody();
+        if (claims.get("type", String.class).equals("refresh")) throw TokenTypeWrongException.EXCEPTION;
+        if (claims.get("exp", Date.class).before(new Date())) throw TokenExpiredException.EXCEPTION;
+        return claims;
     }
 }
