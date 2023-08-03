@@ -26,4 +26,10 @@ public class AuthController {
     public TokenResponseDto login(@Valid @RequestBody AuthRequestDto requestDto) {
         return authService.login(requestDto.getId(), requestDto.getPassword());
     }
+
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @DeleteMapping("/logout")
+    public void logout() {
+        authService.logout();
+    }
 }
