@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RequiredArgsConstructor
-@RequestMapping("/auth")
+@RequestMapping("/user")
 @RestController
 public class UserController {
 
