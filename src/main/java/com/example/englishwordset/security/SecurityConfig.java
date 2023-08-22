@@ -13,6 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsUtils;
 
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -34,6 +35,8 @@ public class SecurityConfig {
                 .formLogin(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(req -> req
+                        .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
+                        .antMatchers(HttpMethod.GET, "/user/test").permitAll()
                         .antMatchers(HttpMethod.POST, "/user/sign-up").permitAll()
                         .antMatchers(HttpMethod.POST, "/user/login").permitAll()
                         .antMatchers(HttpMethod.PUT, "/user/reissue").permitAll()

@@ -37,4 +37,9 @@ public class UserController {
     public void logout() {
         userService.logout();
     }
+
+    @GetMapping("/test")
+    public String test() {
+        return "test get result";
+    }
 }
