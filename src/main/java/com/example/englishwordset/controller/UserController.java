@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDateTime;
 
 @RequiredArgsConstructor
 @RequestMapping("/user")
@@ -40,6 +41,6 @@ public class UserController {
 
     @GetMapping("/test")
     public String test() {
-        return "test get result";
+        return "test get result : " + LocalDateTime.now();
     }
 }
