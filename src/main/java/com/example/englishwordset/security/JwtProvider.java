@@ -24,7 +24,7 @@ import java.util.Date;
 public class JwtProvider {
 
     private final JwtProperties jwtProperties;
-    private final RefreshRepository refreshRepository;
+//    private final RefreshRepository refreshRepository;
     private final DetailsService detailsService;
     private SecretKey secretKey;
 
@@ -50,16 +50,16 @@ public class JwtProvider {
 
     public String refreshTokenGenerator(String userId) {
         String refreshToken = generateToken(JwtProperties.refreshValue, userId, jwtProperties.getRefresh());
-        Refresh refresh = refreshRepository.findById(userId).orElse(null);
-        if (refresh != null) {
-            refreshRepository.save(refresh.updateToken(refreshToken));
-        } else {
-            refreshRepository.save(Refresh.builder()
-                    .userId(userId)
-                    .refresh(refreshToken)
-                    .ttl(jwtProperties.getRefresh())
-                    .build());
-        }
+//        Refresh refresh = refreshRepository.findById(userId).orElse(null);
+//        if (refresh != null) {
+//            refreshRepository.save(refresh.updateToken(refreshToken));
+//        } else {
+//            refreshRepository.save(Refresh.builder()
+//                    .userId(userId)
+//                    .refresh(refreshToken)
+//                    .ttl(jwtProperties.getRefresh())
+//                    .build());
+//        }
         return refreshToken;
     }
 
